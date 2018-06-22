@@ -258,7 +258,7 @@ def commandQuery(parser):
       "endTime": args.end,
       "maxCount": args.count,
       "pageMode": args.mode,
-      "columns": columns,
+      "columns": '', # always ask for all columns. Inefficient maybe, but helps with my funny column names
       "priority": args.priority
     })
 
