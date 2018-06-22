@@ -265,8 +265,11 @@ def commandQuery(parser):
       "priority": args.priority
     })
 
-    # Print the log records.
     matches = response['matches']
+    for match in matches:
+        flatten_match_object_a_little(match, response['sessions'])
+
+    # Print the log records.
 
     if args.output == 'json':
         print( output_encoded( rawResponse ) )
@@ -283,13 +286,10 @@ def commandQuery(parser):
         csvWriter.writerow(ar)
         for i in range(len(matches)):
             match = matches[i]
-            attributes = match.get('attributes')
             for i in range(len(columnList)):
                 column = columnList[i]
                 if column in match:
                     ar[i] = output_encoded( match.get(column))
-                elif column in attributes:
-                    ar[i] = output_encoded( attributes.get(column) )
                 else:
                     ar[i] = ''
             ar = [item.rstrip('\n') if isinstance(item, str) else item for item in ar]
@@ -299,6 +299,17 @@ def commandQuery(parser):
         for i in range(len(matches)):
             printReadableRow(args.output, matches[i])
 
+def flatten_match_object_a_little(match, sessions_info):
+    # Delete the 'attributes' field and move the data up into the 'match' object.
+    # Similarly with 'session'
+    if 'attributes' in match:
+        attributes = match.pop('attributes')
+        for k,v in attributes.items():
+            match['attr_'+k] = v
+    if 'session' in match:
+        session = sessions_info[match.pop('session')]
+        for k,v in session.items():
+            match['sess_'+k] = v
 
 def printReadableRow(output, match):
     rawTimestamp = match.get('timestamp')
