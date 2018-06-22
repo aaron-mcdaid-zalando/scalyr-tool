@@ -292,6 +292,7 @@ def commandQuery(parser):
                     ar[i] = output_encoded( attributes.get(column) )
                 else:
                     ar[i] = ''
+            ar = [item.rstrip('\n') if isinstance(item, str) else item for item in ar]
             csvWriter.writerow(ar)
     else:
         # Readable text format (singleline or multiline)
