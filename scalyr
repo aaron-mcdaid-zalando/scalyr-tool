@@ -279,8 +279,7 @@ def commandQuery(parser):
         for i in range(len(columnList)):
             ar.append(columnList[i])
 
-        csvBuffer = StringIO.StringIO()
-        csvWriter = csv.writer(csvBuffer, dialect='excel')
+        csvWriter = csv.writer(sys.stdout, dialect='excel')
         csvWriter.writerow(ar)
         for i in range(len(matches)):
             match = matches[i]
@@ -294,8 +293,6 @@ def commandQuery(parser):
                 else:
                     ar[i] = ''
             csvWriter.writerow(ar)
-
-        print(csvBuffer.getvalue())
     else:
         # Readable text format (singleline or multiline)
         for i in range(len(matches)):
