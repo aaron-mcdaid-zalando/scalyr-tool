@@ -245,9 +245,6 @@ def commandQuery(parser):
 
     columns = args.columns
     output = args.output
-    if output == 'csv' and columns == '':
-        print_stderr('For CSV output, you must supply a nonempty --columns option')
-        sys.exit(1)
 
     # Get the API token.
     apiToken = getApiToken(args, 'scalyr_readlog_token', 'Read Logs')
@@ -277,6 +274,9 @@ def commandQuery(parser):
         print( output_encoded( json.dumps(response, ensure_ascii=args.no_escape_unicode, sort_keys=True, indent=2, separators=(',', ': ')) ) )
     elif args.output == 'csv':
         columnList = columns.split(',')
+
+        if columns == '' and len(matches) > 0:
+            columnList = list(k for k in matches[0])
 
         ar = []
         for i in range(len(columnList)):
