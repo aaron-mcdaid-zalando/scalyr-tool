@@ -275,8 +275,17 @@ def commandQuery(parser):
     elif args.output == 'csv':
         columnList = columns.split(',')
 
+        if len(matches) == 0:
+            list_of_fields_present = None
+        else:
+            list_of_fields_present = list(k for k in matches[0])
+
         if columns == '' and len(matches) > 0:
-            columnList = list(k for k in matches[0])
+            columnList = list_of_fields_present
+
+        if columnList[-1] == '_':
+            not_explicitly_asked_for = [f for f in list_of_fields_present if f not in columnList]
+            columnList[-1:] = not_explicitly_asked_for
 
         ar = []
         for i in range(len(columnList)):
